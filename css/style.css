@@ -394,4 +394,49 @@ body {
     margin: 0; /* Видаляє зовнішні відступи заголовка */
 }
 
+/* Футер */
+
+.footer {
+    background-color: #1b3b5f; 
+    color: #ffffff; 
+    text-align: center; 
+    padding: 5px 0; /* Зменшений padding */
+    font-size: 1rem; 
+    position: fixed; 
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1; /* Менший z-index */
+  }
+  
+  .app__container-bottom {
+    margin-bottom: 40px; /* Додаємо відступ знизу */ 
+  }
+  
+  .card {
+    z-index: 2; /* Більший z-index */
+  }
+
+
+  /* Оптимізація контейнера */
+  .app__container-bottom {
+    overflow-y: scroll; 
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+  }
+  
+  .app__container-bottom::-webkit-scrollbar { 
+    display: none; 
+  }
+
+@media (max-width: 768px) {
+    .card__title {
+      font-size: 24px;
+    }
+  
+    .app__container {
+      padding-top: 120px;
+    }
+  }
+
 
