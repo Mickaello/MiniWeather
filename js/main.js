@@ -8,8 +8,16 @@ let currentCard = null
 async function getWeatherData(location) {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${APIKEY}&units=metric`)
 
+    if (!response.ok) { // Перевірка коду статусу
+        if (response.status === 404) {
+            alert('Місто не знайдено. Будь ласка, перевірте правильність написання.'); 
+        } else {
+            alert('Помилка отримання даних про погоду.');
+        }
+        throw new Error('Помилка API'); // Зупиняємо виконання функції
+    }
+
     const data = await response.json()
-    
     return data
 }
 
@@ -91,48 +99,54 @@ function getNewCard() {
 }
 
 $locationForm.addEventListener('submit', function(event) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const newCard = getNewCard()
+    const newCard = getNewCard();
 
-    const location = $locationInput.value.trim()
-    $locationInput.value = ''
+    const location = $locationInput.value.trim();
+    $locationInput.value = '';
 
-    $cardsBox.prepend(newCard.$card)
+    $cardsBox.prepend(newCard.$card);
 
     setTimeout(async function() {
-        newCard.$card.classList.add("loading")
+        newCard.$card.classList.add("loading");
 
-        const data = await getWeatherData(location)
+        try { 
+            const data = await getWeatherData(location);
 
-        // Іконки для погоди 
-        newCard.$icon.style.backgroundImage = `url(https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png)`
+            // Іконки для погоди 
+            newCard.$icon.style.backgroundImage = `url(https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png)`;
 
-        newCard.$title.textContent = data.name
-        newCard.$desc.textContent = data.weather[0].description
-        newCard.$temp.textContent = data.main.temp
-        newCard.$wind.textContent = data.wind.speed
-        newCard.$humidity.textContent = data.main.humidity
+            newCard.$title.textContent = data.name;
+            newCard.$desc.textContent = data.weather[0].description;
+            newCard.$temp.textContent = data.main.temp;
+            newCard.$wind.textContent = data.wind.speed;
+            newCard.$humidity.textContent = data.main.humidity;
 
-        console.log(data);
+            console.log(data);
 
-        setTimeout(function() {
-            // Зміна стилю форми
-            document.querySelector('.app__container').classList.add('app__container_top')
+            setTimeout(function() {
+                // Зміна стилю форми
+                document.querySelector('.app__container').classList.add('app__container_top');
 
-            // Зміна фону
-            document.body.style.backgroundImage = `url(img/bg/${data.weather[0].icon}.jpeg)`
+                // Зміна фону
+                document.body.style.backgroundImage = `url(img/bg/${data.weather[0].icon}.jpeg)`;
 
 
-            if (currentCard !== null) {
-                currentCard.$card.classList.add("glass")
-            }
-            currentCard = newCard
+                if (currentCard !== null) {
+                    currentCard.$card.classList.add("glass");
+                }
+                currentCard = newCard;
 
-            newCard.$card.classList.remove("loading")
-            newCard.$card.classList.add("full")
-        }, 600)
+                newCard.$card.classList.remove("loading");
+                newCard.$card.classList.add("full");
+            }, 600);
 
-    }, 30)
 
-})
+        } catch (error) {
+            newCard.$card.remove(); 
+        }
+
+    }, 30);
+
+});
