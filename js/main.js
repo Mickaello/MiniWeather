@@ -5,6 +5,8 @@ const $locationForm = document.getElementById('location-form')
 const $locationInput = document.getElementById('location-form-input')
 let currentCard = null
 
+document.body.style.backgroundImage = "url('img/Kyiv.jpg')";  /* початкове зображення */
+
 async function getWeatherData(location) {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${APIKEY}&units=metric`)
 
